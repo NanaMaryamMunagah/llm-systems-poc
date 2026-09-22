@@ -1,0 +1,228 @@
+{
+  "overall_status": "PASS",
+  "thresholds": {
+    "gpu_memory_gib_min": 135,
+    "bf16_tflops_warn": 550,
+    "bf16_tflops_fail": 400,
+    "hbm_gbs_warn": 3400,
+    "hbm_gbs_fail": 2500,
+    "inter_node_alg_bw_gbs_warn": 20,
+    "inter_node_alg_bw_gbs_fail": 8,
+    "storage_read_mbs_warn": 500,
+    "storage_read_mbs_fail": 100
+  },
+  "checks": [
+    {
+      "name": "worker-0 GPU 0 memory",
+      "value": "139.80 GiB",
+      "status": "PASS",
+      "detail": "Minimum 135 GiB"
+    },
+    {
+      "name": "worker-0 GPU 1 memory",
+      "value": "139.80 GiB",
+      "status": "PASS",
+      "detail": "Minimum 135 GiB"
+    },
+    {
+      "name": "worker-1 GPU 0 memory",
+      "value": "139.80 GiB",
+      "status": "PASS",
+      "detail": "Minimum 135 GiB"
+    },
+    {
+      "name": "worker-1 GPU 1 memory",
+      "value": "139.80 GiB",
+      "status": "PASS",
+      "detail": "Minimum 135 GiB"
+    },
+    {
+      "name": "worker-1 GPU 0 BF16",
+      "value": "805.86 TFLOPS",
+      "status": "PASS",
+      "detail": "Warn < 550, fail < 400"
+    },
+    {
+      "name": "worker-1 GPU 1 BF16",
+      "value": "768.05 TFLOPS",
+      "status": "PASS",
+      "detail": "Warn < 550, fail < 400"
+    },
+    {
+      "name": "worker-0 GPU 0 BF16",
+      "value": "797.94 TFLOPS",
+      "status": "PASS",
+      "detail": "Warn < 550, fail < 400"
+    },
+    {
+      "name": "worker-0 GPU 1 BF16",
+      "value": "783.16 TFLOPS",
+      "status": "PASS",
+      "detail": "Warn < 550, fail < 400"
+    },
+    {
+      "name": "worker-0 GPU 1 HBM",
+      "value": "4277.22 GB/s",
+      "status": "PASS",
+      "detail": "Warn < 3400, fail < 2500"
+    },
+    {
+      "name": "worker-0 GPU 0 HBM",
+      "value": "4276.03 GB/s",
+      "status": "PASS",
+      "detail": "Warn < 3400, fail < 2500"
+    },
+    {
+      "name": "worker-1 GPU 0 HBM",
+      "value": "4275.76 GB/s",
+      "status": "PASS",
+      "detail": "Warn < 3400, fail < 2500"
+    },
+    {
+      "name": "worker-1 GPU 1 HBM",
+      "value": "4275.06 GB/s",
+      "status": "PASS",
+      "detail": "Warn < 3400, fail < 2500"
+    },
+    {
+      "name": "Multi-node NCCL correctness",
+      "value": true,
+      "status": "PASS",
+      "detail": "All ranks must receive expected AllReduce result"
+    },
+    {
+      "name": "NCCL transport",
+      "value": "IB",
+      "status": "PASS",
+      "detail": "Expected InfiniBand transport"
+    },
+    {
+      "name": "GPU Direct RDMA",
+      "value": true,
+      "status": "PASS",
+      "detail": "Expected for high-performance multi-node communication"
+    },
+    {
+      "name": "Inter-node AllReduce algorithm bandwidth",
+      "value": "63.17 GB/s",
+      "status": "PASS",
+      "detail": "Warn < 20, fail < 8"
+    },
+    {
+      "name": "Shared storage read",
+      "value": "920.00 MB/s",
+      "status": "PASS",
+      "detail": "Warn < 500, fail < 100"
+    }
+  ],
+  "measurements": {
+    "gpus": [
+      {
+        "host": "worker-0",
+        "gpu": 0,
+        "name": "NVIDIA H200",
+        "memory_gib": 139.8
+      },
+      {
+        "host": "worker-0",
+        "gpu": 1,
+        "name": "NVIDIA H200",
+        "memory_gib": 139.8
+      },
+      {
+        "host": "worker-1",
+        "gpu": 0,
+        "name": "NVIDIA H200",
+        "memory_gib": 139.8
+      },
+      {
+        "host": "worker-1",
+        "gpu": 1,
+        "name": "NVIDIA H200",
+        "memory_gib": 139.8
+      }
+    ],
+    "bf16": [
+      {
+        "rank": 2,
+        "host": "worker-1",
+        "gpu": 0,
+        "gpu_name": "NVIDIA H200",
+        "matrix_size": 8192,
+        "avg_time_ms": 1.364,
+        "tflops": 805.86
+      },
+      {
+        "rank": 3,
+        "host": "worker-1",
+        "gpu": 1,
+        "gpu_name": "NVIDIA H200",
+        "matrix_size": 8192,
+        "avg_time_ms": 1.432,
+        "tflops": 768.05
+      },
+      {
+        "rank": 0,
+        "host": "worker-0",
+        "gpu": 0,
+        "gpu_name": "NVIDIA H200",
+        "matrix_size": 8192,
+        "avg_time_ms": 1.378,
+        "tflops": 797.94
+      },
+      {
+        "rank": 1,
+        "host": "worker-0",
+        "gpu": 1,
+        "gpu_name": "NVIDIA H200",
+        "matrix_size": 8192,
+        "avg_time_ms": 1.404,
+        "tflops": 783.16
+      }
+    ],
+    "hbm": [
+      {
+        "rank": 1,
+        "host": "worker-0",
+        "gpu": 1,
+        "gpu_name": "NVIDIA H200",
+        "avg_time_ms": 1.004,
+        "bandwidth_gbs": 4277.22
+      },
+      {
+        "rank": 0,
+        "host": "worker-0",
+        "gpu": 0,
+        "gpu_name": "NVIDIA H200",
+        "avg_time_ms": 1.004,
+        "bandwidth_gbs": 4276.03
+      },
+      {
+        "rank": 2,
+        "host": "worker-1",
+        "gpu": 0,
+        "gpu_name": "NVIDIA H200",
+        "avg_time_ms": 1.004,
+        "bandwidth_gbs": 4275.76
+      },
+      {
+        "rank": 3,
+        "host": "worker-1",
+        "gpu": 1,
+        "gpu_name": "NVIDIA H200",
+        "avg_time_ms": 1.005,
+        "bandwidth_gbs": 4275.06
+      }
+    ],
+    "nccl": {
+      "correctness": true,
+      "transport": "IB",
+      "gpu_direct_rdma": true,
+      "inter_node_alg_bw_gbs": 63.17
+    },
+    "storage": {
+      "write_mbs": 1200.0,
+      "read_mbs": 920.0
+    }
+  }
+}

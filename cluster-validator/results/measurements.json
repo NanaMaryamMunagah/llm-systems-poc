@@ -1,0 +1,110 @@
+{
+  "gpus": [
+    {
+      "host": "worker-0",
+      "gpu": 0,
+      "name": "NVIDIA H200",
+      "memory_gib": 139.8
+    },
+    {
+      "host": "worker-0",
+      "gpu": 1,
+      "name": "NVIDIA H200",
+      "memory_gib": 139.8
+    },
+    {
+      "host": "worker-1",
+      "gpu": 0,
+      "name": "NVIDIA H200",
+      "memory_gib": 139.8
+    },
+    {
+      "host": "worker-1",
+      "gpu": 1,
+      "name": "NVIDIA H200",
+      "memory_gib": 139.8
+    }
+  ],
+  "bf16": [
+    {
+      "rank": 2,
+      "host": "worker-1",
+      "gpu": 0,
+      "gpu_name": "NVIDIA H200",
+      "matrix_size": 8192,
+      "avg_time_ms": 1.364,
+      "tflops": 805.86
+    },
+    {
+      "rank": 3,
+      "host": "worker-1",
+      "gpu": 1,
+      "gpu_name": "NVIDIA H200",
+      "matrix_size": 8192,
+      "avg_time_ms": 1.432,
+      "tflops": 768.05
+    },
+    {
+      "rank": 0,
+      "host": "worker-0",
+      "gpu": 0,
+      "gpu_name": "NVIDIA H200",
+      "matrix_size": 8192,
+      "avg_time_ms": 1.378,
+      "tflops": 797.94
+    },
+    {
+      "rank": 1,
+      "host": "worker-0",
+      "gpu": 1,
+      "gpu_name": "NVIDIA H200",
+      "matrix_size": 8192,
+      "avg_time_ms": 1.404,
+      "tflops": 783.16
+    }
+  ],
+  "hbm": [
+    {
+      "rank": 1,
+      "host": "worker-0",
+      "gpu": 1,
+      "gpu_name": "NVIDIA H200",
+      "avg_time_ms": 1.004,
+      "bandwidth_gbs": 4277.22
+    },
+    {
+      "rank": 0,
+      "host": "worker-0",
+      "gpu": 0,
+      "gpu_name": "NVIDIA H200",
+      "avg_time_ms": 1.004,
+      "bandwidth_gbs": 4276.03
+    },
+    {
+      "rank": 2,
+      "host": "worker-1",
+      "gpu": 0,
+      "gpu_name": "NVIDIA H200",
+      "avg_time_ms": 1.004,
+      "bandwidth_gbs": 4275.76
+    },
+    {
+      "rank": 3,
+      "host": "worker-1",
+      "gpu": 1,
+      "gpu_name": "NVIDIA H200",
+      "avg_time_ms": 1.005,
+      "bandwidth_gbs": 4275.06
+    }
+  ],
+  "nccl": {
+    "correctness": true,
+    "transport": "IB",
+    "gpu_direct_rdma": true,
+    "inter_node_alg_bw_gbs": 63.17
+  },
+  "storage": {
+    "write_mbs": 1200.0,
+    "read_mbs": 920.0
+  }
+}

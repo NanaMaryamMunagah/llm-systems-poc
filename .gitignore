@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Slurm output
+*.out
+
+# Enroot/container artifacts
+*.sqsh
+
+# Temporary validation runs
+cluster-validator/results/raw_*/
+
+# Keep final Phase 0 validation evidence
+!cluster-validator/results/raw_473/
+!cluster-validator/results/raw_473/**
+
+# Exclude verbose NCCL diagnostic log
+cluster-validator/results/raw_473/nccl_benchmark.log
+
+# Editor / OS
+.DS_Store
+*.swp
