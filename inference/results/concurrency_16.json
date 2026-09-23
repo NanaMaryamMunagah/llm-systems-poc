@@ -1,0 +1,10 @@
+{
+  "concurrency": 16,
+  "requests": 128,
+  "output_tokens_per_request": 64,
+  "total_output_tokens": 8192,
+  "total_time_seconds": 3.277078024111688,
+  "output_tokens_per_second": 2499.7879024319514,
+  "requests_per_second": 39.05918597549924,
+  "average_latency_seconds": 0.4056979000561114
+}
