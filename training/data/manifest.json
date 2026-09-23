@@ -1,0 +1,55 @@
+{
+  "seed": 1234,
+  "split_ratio": {
+    "train": 0.6,
+    "validation": 0.1,
+    "test": 0.3
+  },
+  "subjects": {
+    "elementary_mathematics": {
+      "original_count": 424,
+      "unique_count": 423,
+      "duplicates_removed": 1,
+      "train": 253,
+      "validation": 42,
+      "test": 128
+    },
+    "high_school_mathematics": {
+      "original_count": 304,
+      "unique_count": 304,
+      "duplicates_removed": 0,
+      "train": 182,
+      "validation": 30,
+      "test": 92
+    },
+    "high_school_statistics": {
+      "original_count": 244,
+      "unique_count": 244,
+      "duplicates_removed": 0,
+      "train": 146,
+      "validation": 24,
+      "test": 74
+    },
+    "college_mathematics": {
+      "original_count": 116,
+      "unique_count": 116,
+      "duplicates_removed": 0,
+      "train": 69,
+      "validation": 11,
+      "test": 36
+    },
+    "abstract_algebra": {
+      "original_count": 116,
+      "unique_count": 116,
+      "duplicates_removed": 0,
+      "train": 69,
+      "validation": 11,
+      "test": 36
+    }
+  },
+  "totals": {
+    "train": 719,
+    "validation": 118,
+    "test": 366
+  }
+}

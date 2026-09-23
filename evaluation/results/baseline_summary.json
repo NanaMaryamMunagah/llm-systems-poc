@@ -1,0 +1,34 @@
+{
+  "model": "google/gemma-3-4b-pt",
+  "evaluation_split": "custom held-out MMLU math test split",
+  "total_examples": 366,
+  "correct": 130,
+  "accuracy": 0.3551912568306011,
+  "per_subject": {
+    "abstract_algebra": {
+      "correct": 8,
+      "total": 36,
+      "accuracy": 0.2222222222222222
+    },
+    "college_mathematics": {
+      "correct": 13,
+      "total": 36,
+      "accuracy": 0.3611111111111111
+    },
+    "elementary_mathematics": {
+      "correct": 55,
+      "total": 128,
+      "accuracy": 0.4296875
+    },
+    "high_school_mathematics": {
+      "correct": 25,
+      "total": 92,
+      "accuracy": 0.2717391304347826
+    },
+    "high_school_statistics": {
+      "correct": 29,
+      "total": 74,
+      "accuracy": 0.3918918918918919
+    }
+  }
+}

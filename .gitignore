@@ -19,6 +19,15 @@ cluster-validator/results/raw_*/
 # Exclude verbose NCCL diagnostic log
 cluster-validator/results/raw_473/nccl_benchmark.log
 
+# Model weights downloaded from Hugging Face
+models/
+
+# Training checkpoints and adapters
+training/results/*/
+
 # Editor / OS
 .DS_Store
 *.swp
+models/
+
+

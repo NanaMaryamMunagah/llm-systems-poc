@@ -1,0 +1,35 @@
+{
+  "model": "/workspace/models/gemma-3-4b-pt",
+  "adapter": "training/results/gemma3-4b-mmlu-math-lora/final_adapter",
+  "evaluation_split": "custom held-out MMLU math test split",
+  "total_examples": 366,
+  "correct": 153,
+  "accuracy": 0.4180327868852459,
+  "per_subject": {
+    "abstract_algebra": {
+      "correct": 9,
+      "total": 36,
+      "accuracy": 0.25
+    },
+    "college_mathematics": {
+      "correct": 12,
+      "total": 36,
+      "accuracy": 0.3333333333333333
+    },
+    "elementary_mathematics": {
+      "correct": 57,
+      "total": 128,
+      "accuracy": 0.4453125
+    },
+    "high_school_mathematics": {
+      "correct": 36,
+      "total": 92,
+      "accuracy": 0.391304347826087
+    },
+    "high_school_statistics": {
+      "correct": 39,
+      "total": 74,
+      "accuracy": 0.527027027027027
+    }
+  }
+}
