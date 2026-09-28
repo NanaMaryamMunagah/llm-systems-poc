@@ -5,6 +5,7 @@ __pycache__/
 
 # Slurm output
 *.out
+*.log
 
 # Enroot/container artifacts
 *.sqsh
