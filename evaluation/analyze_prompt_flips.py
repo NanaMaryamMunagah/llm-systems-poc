@@ -3,11 +3,9 @@ from pathlib import Path
 
 RESULTS_DIR = Path("evaluation/results/prompt_ablation")
 
-
 def load_predictions(filename):
     with open(RESULTS_DIR / filename) as f:
         return [json.loads(line) for line in f]
-
 
 def compare(original, variant, variant_name):
     wrong_to_right = []
@@ -39,7 +37,6 @@ def compare(original, variant, variant_name):
         "right_to_wrong": len(right_to_wrong),
     }
 
-
 def main():
     p0 = load_predictions(
         "P0_original_predictions.jsonl"
@@ -64,7 +61,6 @@ def main():
         p2,
         "P2_constrained",
     )
-
 
 if __name__ == "__main__":
     main()

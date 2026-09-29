@@ -1,0 +1,102 @@
+{
+  "model": "training/results/gemma3-4b-mmlu-math-full/final_model",
+  "evaluation_split": "custom held-out MMLU math test split",
+  "prompt_variants": {
+    "P0_original": {
+      "correct": 104,
+      "total": 366,
+      "accuracy": 0.28415300546448086,
+      "per_subject": {
+        "abstract_algebra": {
+          "correct": 7,
+          "total": 36,
+          "accuracy": 0.19444444444444445
+        },
+        "college_mathematics": {
+          "correct": 8,
+          "total": 36,
+          "accuracy": 0.2222222222222222
+        },
+        "elementary_mathematics": {
+          "correct": 33,
+          "total": 128,
+          "accuracy": 0.2578125
+        },
+        "high_school_mathematics": {
+          "correct": 26,
+          "total": 92,
+          "accuracy": 0.2826086956521739
+        },
+        "high_school_statistics": {
+          "correct": 30,
+          "total": 74,
+          "accuracy": 0.40540540540540543
+        }
+      }
+    },
+    "P1_explicit": {
+      "correct": 107,
+      "total": 366,
+      "accuracy": 0.2923497267759563,
+      "per_subject": {
+        "abstract_algebra": {
+          "correct": 7,
+          "total": 36,
+          "accuracy": 0.19444444444444445
+        },
+        "college_mathematics": {
+          "correct": 9,
+          "total": 36,
+          "accuracy": 0.25
+        },
+        "elementary_mathematics": {
+          "correct": 36,
+          "total": 128,
+          "accuracy": 0.28125
+        },
+        "high_school_mathematics": {
+          "correct": 22,
+          "total": 92,
+          "accuracy": 0.2391304347826087
+        },
+        "high_school_statistics": {
+          "correct": 33,
+          "total": 74,
+          "accuracy": 0.44594594594594594
+        }
+      }
+    },
+    "P2_constrained": {
+      "correct": 108,
+      "total": 366,
+      "accuracy": 0.29508196721311475,
+      "per_subject": {
+        "abstract_algebra": {
+          "correct": 7,
+          "total": 36,
+          "accuracy": 0.19444444444444445
+        },
+        "college_mathematics": {
+          "correct": 9,
+          "total": 36,
+          "accuracy": 0.25
+        },
+        "elementary_mathematics": {
+          "correct": 37,
+          "total": 128,
+          "accuracy": 0.2890625
+        },
+        "high_school_mathematics": {
+          "correct": 22,
+          "total": 92,
+          "accuracy": 0.2391304347826087
+        },
+        "high_school_statistics": {
+          "correct": 33,
+          "total": 74,
+          "accuracy": 0.44594594594594594
+        }
+      }
+    }
+  }
+}

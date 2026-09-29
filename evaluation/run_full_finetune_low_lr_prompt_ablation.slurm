@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=prompt-ablation
+#SBATCH --job-name=full-prompt-low-lr-eval
 #SBATCH --partition=earlytalent
 #SBATCH --qos=gpulimit
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
-#SBATCH --time=00:30:00
-#SBATCH --output=evaluation/results/prompt_ablation_%j.log
+#SBATCH --time=00:20:00
+#SBATCH --output=/home/nmm/llm-systems-poc-clean/evaluation/results/full_finetune_low_lr_prompt_ablation_%j.log
 
 set -euo pipefail
 
@@ -23,5 +23,5 @@ enroot start \
     "$CONTAINER" \
     bash -c '
         cd /workspace
-        python evaluation/prompt_ablation.py
+        python evaluation/full_finetune_low_lr_prompt_ablation.py
     '
