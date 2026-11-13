@@ -2,11 +2,11 @@
 
 I built this project for an AI/ML Solutions Architect technical assessment. The scenario was a startup considering a large GPU deployment for training and serving a language model. Before committing to that setup, the startup needed to know whether the infrastructure could run the workload and how well the model would perform.
 
-I tested the workflow on two NVIDIA H200 nodes, using four GPUs for distributed training. I also served the fine-tuned model on one H200 and measured inference performance.
+I tested the workflow on two NVIDIA H200 nodes, using four GPUs for distributed training. I also served the LoRA fine-tuned model on one H200 and measured inference performance.
 
 The main results:
-- **Model accuracy:** 35.52% → 41.80% on a held-out set of math questions.
-- **Inference throughput:** 196.52 → 4,332.11 output tokens/second as I increased concurrent requests, about **22× higher**. Average request latency also increased.
+- **Model accuracy:** 35.52% → 41.80% on a held-out set of math questions using LoRA.
+- **Inference throughput:** 196.52 → 4,332.11 output tokens/second as I increased concurrent requests, about **22× higher** aggregate throughput. Average request latency also increased.
 
 These are results from a small proof of concept, not a benchmark of the proposed 512-H100 deployment.
 
@@ -31,10 +31,10 @@ flowchart TD
 | What I tested | Result |
 |---|---|
 | Cluster checks | Passed on 4 H200 GPUs across 2 nodes |
-| Distributed training | Completed on 2 nodes, 2 GPUs per node |
+| Distributed LoRA training | Completed on 2 nodes, 2 GPUs per node |
 | Parameters updated with LoRA | 11.9M of 4.31B (0.276%) |
-| Accuracy before fine-tuning | 35.52% |
-| Accuracy after fine-tuning | 41.80% |
+| Base model accuracy | 35.52% |
+| LoRA model accuracy | 41.80% |
 | Accuracy improvement | +6.28 percentage points |
 | Inference throughput, 1 concurrent request | 196.52 output tokens/s |
 | Inference throughput, 128 concurrent requests | 4,332.11 output tokens/s |
@@ -50,13 +50,22 @@ llm-systems-poc/
 │   ├── Dockerfile
 │   ├── CLUSTER_VALIDATION.md
 │   ├── scripts/
-│   ├── validator/
-│   └── results/
+│   └── validator/
 ├── training/
 │   ├── data/
 │   ├── scripts/
-│   └── train_lora.py
+│   ├── results/
+│   ├── prepare_data.py
+│   ├── train_lora.py
+│   └── train_full_finetune.py
 ├── evaluation/
+│   ├── evaluate_mmlu.py
+│   ├── evaluate_finetuned_mmlu.py
+│   ├── base_prompt_ablation.py
+│   ├── lora_prompt_ablation.py
+│   ├── full_finetune_prompt_ablation.py
+│   ├── full_finetune_low_lr_prompt_ablation.py
+│   ├── analyze_prompt_flips.py
 │   └── results/
 └── inference/
     ├── benchmark_throughput.py
@@ -65,7 +74,7 @@ llm-systems-poc/
     └── results/
 ```
 
-Model weights, container images and large training checkpoints are not stored in this repository. The separate live-demo Slurm scripts were not included in the version recovered from GitHub.
+Model weights, container images and large training checkpoints are not stored in this repository.
 
 ## 1. Checking the GPU cluster
 
@@ -96,7 +105,7 @@ I used `google/gemma-3-4b-pt`, a pretrained language model with roughly four bil
 
 For training, I used multiple-choice math questions from five areas of `cais/mmlu`: elementary mathematics, high school mathematics, high school statistics, college mathematics and abstract algebra.
 
-I removed exact duplicates based on the question and answer choices, then split the data using seed `1234`.
+I removed exact duplicates using a normalized representation of each question, its answer choices and correct answer, then split the data using seed `1234`.
 
 | Split | Questions |
 |---|---:|
@@ -138,7 +147,7 @@ The model was trained to predict the correct answer letter. I used LoRA so I cou
 
 Only the answer token contributed to the training loss; prompt and padding tokens were masked.
 
-I trained with PyTorch DistributedDataParallel (`torchrun`) and NCCL across **four H200 GPUs on two Slurm nodes**. The run finished three epochs and 36 optimizer steps in about 27.4 seconds.
+I trained with PyTorch DistributedDataParallel (`torchrun`) and NCCL across **four H200 GPUs on two Slurm nodes**. The recorded LoRA run finished three epochs in about 27.4 seconds.
 
 | Epoch | Validation loss |
 |---:|---:|
@@ -146,13 +155,15 @@ I trained with PyTorch DistributedDataParallel (`torchrun`) and NCCL across **fo
 | 2 | 1.273 |
 | 3 | 1.297 |
 
+The final adapter was saved after epoch 3; the lowest recorded validation loss was at epoch 2.
+
 ## 3. Evaluating the model
 
-I compared the original model and the fine-tuned model on the same 366 held-out questions, using the same prompt and scoring method.
+I compared the original model and the LoRA fine-tuned model on the same 366 held-out questions, using the same prompt and scoring method.
 
 For each question, I compared the model's next-token scores for `A`, `B`, `C` and `D`, then selected the highest-scoring answer. This was a multiple-choice scoring test, not free-form text generation.
 
-| Math subject | Before | After |
+| Math subject | Before | After LoRA |
 |---|---:|---:|
 | Abstract algebra | 22.22% | 25.00% |
 | College mathematics | 36.11% | 33.33% |
@@ -165,9 +176,37 @@ The model went from **130 to 153 correct answers out of 366**, an improvement of
 
 The evaluation code and recorded predictions are in `evaluation/`.
 
+### Additional fine-tuning and prompt experiments
+
+I also tested full-parameter fine-tuning and three prompt formats to see how training configuration and prompt wording affected accuracy. All four configurations were evaluated on the same custom 366-question test set using next-token scoring for the answer letters.
+
+- **P0 — Original:** The question and four answer choices, ending with `Answer:`.
+- **P1 — Explicit:** Adds an instruction to choose the correct answer from A, B, C or D.
+- **P2 — Constrained:** Adds an instruction to respond with only the correct answer letter.
+
+| Configuration | P0 Original | P1 Explicit | P2 Constrained |
+|---|---:|---:|---:|
+| Base model | 35.52% | 36.89% | 36.07% |
+| **LoRA (2e-4, 3 epochs)** | **41.80%** | **40.44%** | **39.89%** |
+| Full fine-tuning (2e-5, 3 epochs) | 28.42% | 29.23% | 29.51% |
+| Revised full fine-tuning (2e-6, 10 epochs) | 37.98% | 38.52% | 38.80% |
+
+The original full fine-tuning configuration scored below the base model. A revised configuration with a lower learning rate and more epochs performed better, reaching 37.98% with P0. Because I changed both the learning rate and the number of epochs, I cannot attribute the improvement to either change alone. LoRA had the highest observed accuracy among the configurations tested.
+
+I also compared individual LoRA predictions between P0 and the alternative prompts:
+
+| Comparison | Predictions changed | Wrong → right | Right → wrong | Net change |
+|---|---:|---:|---:|---:|
+| P0 → P1 | 71 | 20 | 25 | −5 correct |
+| P0 → P2 | 87 | 23 | 30 | −7 correct |
+
+More explicit instructions changed many individual answers, but they did not improve overall LoRA accuracy in these tests. These are results from specific configurations and one custom test split, not evidence that LoRA is always better than full fine-tuning or that one prompt style is universally best.
+
+The LoRA training log is included in the repository. The full fine-tuning training logs are not included locally, so the exact completed epoch counts and validation-loss histories for those runs have not been independently verified from logs.
+
 ## 4. Serving the model and testing inference
 
-I served the fine-tuned model with **vLLM** on one H200 GPU using an OpenAI-compatible completion API.
+I served the LoRA fine-tuned model with **vLLM** on one H200 GPU using an OpenAI-compatible completion API.
 
 I wanted to see how many output tokens the server could produce per second as more requests arrived at the same time. I kept the model, GPU, prompt, number of requests and output length the same, and changed only concurrency.
 
@@ -191,9 +230,9 @@ xychart-beta
     line [196.52, 774.96, 1456.15, 2499.79, 3497.44, 3825.90, 4332.11]
 ```
 
-Throughput increased by about **22×** from concurrency 1 to 128. But the average time per request also rose from **0.326 seconds to 1.031 seconds**.
+Aggregate output throughput increased by about **22×** from concurrency 1 to 128. But average request latency also rose from **0.326 seconds to 1.031 seconds**.
 
-So higher concurrency helped the server process more tokens overall, but individual requests took longer. Concurrency 128 was the best throughput **among the settings I tested**, not necessarily the best setting for a real application.
+Higher concurrency helped the server process more tokens overall, but individual requests took longer. Concurrency 128 gave the highest throughput **among the settings I tested**, not necessarily the best setting for a real application. This was a fixed-prompt sweep without repeated trials or tail-latency measurements, so it is not a comprehensive production load test.
 
 More details: [Inference performance notes](inference/inference_performance.md).
 
@@ -212,7 +251,7 @@ The main places to start are:
 
 - `cluster-validator/CLUSTER_VALIDATION.md` for the hardware checks.
 - `training/` for the distributed fine-tuning code and launch scripts.
-- `evaluation/` for baseline and fine-tuned model evaluation.
+- `evaluation/` for baseline, fine-tuned model and prompt ablation evaluations.
 - `inference/inference_performance.md` for the serving setup and benchmark procedure.
 
 For example, the cluster validator is launched with:
